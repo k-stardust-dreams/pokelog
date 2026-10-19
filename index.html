@@ -22,6 +22,7 @@ main{max-width:900px;margin:18px auto;padding:0 12px 48px}.tabs{display:flex;gap
 .record{border:1px solid var(--line);border-radius:13px;padding:13px;margin-top:10px;background:#fff}.recordtop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.recordtitle{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:3px}.tag{display:inline-block;background:#edf0f6;color:#39445a;padding:4px 7px;border-radius:7px;font-size:11px;margin:5px 4px 0 0}.resultwin{color:var(--good)}.resultloss{color:var(--bad)}.empty{padding:26px 12px;text-align:center;color:var(--muted);font-size:14px}.hidden{display:none!important}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{padding:12px;background:#f5f7fb;border-radius:12px}.stat strong{font-size:23px;display:block}.stat span{font-size:11px;color:var(--muted)}.barrow{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;align-items:center;font-size:13px;margin:9px 0}.barbg{height:8px;background:#edf0f6;border-radius:99px;overflow:hidden}.barfill{height:100%;background:var(--accent);border-radius:99px}.smalltext{font-size:12px;color:var(--muted)}footer{text-align:center;font-size:11px;color:var(--muted);padding:10px}
 @media(min-width:650px){main{padding-left:18px;padding-right:18px}.panel{padding:20px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:9px}.stat strong{font-size:20px}}
+.pokemon-picker{position:relative}.pokemon-picker input{margin-bottom:7px}.pokemon-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.pokemon-chip{display:inline-flex;align-items:center;gap:7px;background:var(--accent2);color:var(--accent);border:1px solid #cbd2ff;border-radius:999px;padding:6px 9px;font-size:13px}.pokemon-chip button{border:0;background:transparent;color:inherit;font-weight:800;padding:0 2px;cursor:pointer}.pokemon-results{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;max-height:220px;overflow-y:auto;margin:4px 0 8px}.pokemon-result{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:#fff;padding:10px 12px;font:inherit;font-size:14px;color:var(--ink)}.pokemon-result:last-child{border-bottom:0}.pokemon-result:active{background:var(--accent2)}.pokemon-empty{padding:10px 12px;font-size:12px;color:var(--muted)}.pokemon-picker .hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -44,18 +45,18 @@ main{max-width:900px;margin:18px auto;padding:0 12px 48px}.tabs{display:flex;gap
 <div class="field"><label for="result">勝敗</label><select id="result"><option value="win">勝ち</option><option value="loss">負け</option><option value="draw">引き分け・無効</option></select></div>
 </div>
 <div class="grid" style="margin-top:12px">
-<div class="field"><label for="opponentTeam">相手の6匹（見せ合い）</label><textarea id="opponentTeam" placeholder="例：ボーマンダ、サーフゴー、ガブリアス…&#10;1行に1匹、または読点・カンマ区切り"></textarea></div>
-<div class="field"><label for="opponentSelected">相手の実際の選出（分かる範囲）</label><textarea id="opponentSelected" placeholder="例：ボーマンダ、サーフゴー、マリルリ"></textarea></div>
+<div class="field"><label>相手の6匹（見せ合い）</label><div id="opponentTeamPicker" class="pokemon-picker"></div><textarea id="opponentTeam" class="hidden" aria-hidden="true"></textarea></div>
+<div class="field"><label>相手の実際の選出（分かる範囲）</label><div id="opponentSelectedPicker" class="pokemon-picker"></div><textarea id="opponentSelected" class="hidden" aria-hidden="true"></textarea><div class="hint">左で登録した6匹からタップして選べます。</div></div>
 </div>
-<div class="hint">ポケモン名は自由入力です。略称でも記録できますが、分析精度を上げるには毎回同じ表記にしてください。</div>
+<div class="hint">名前の一部を入力すると候補が表示されます。候補にない名前は「入力した名前を追加」から登録できます。</div>
 </div>
 
 <div class="panel">
 <h2>自分の選出</h2>
 <div class="grid three">
-<div class="field"><label for="my1">1匹目</label><input id="my1" list="pokemonNames" placeholder="例：メガエルレイド"></div>
-<div class="field"><label for="my2">2匹目</label><input id="my2" list="pokemonNames" placeholder="例：ウォッシュロトム"></div>
-<div class="field"><label for="my3">3匹目</label><input id="my3" list="pokemonNames" placeholder="例：マスカーニャ"></div>
+<div class="field"><label>1匹目</label><div id="my1Picker" class="pokemon-picker"></div><input id="my1" class="hidden" aria-hidden="true"></div>
+<div class="field"><label>2匹目</label><div id="my2Picker" class="pokemon-picker"></div><input id="my2" class="hidden" aria-hidden="true"></div>
+<div class="field"><label>3匹目</label><div id="my3Picker" class="pokemon-picker"></div><input id="my3" class="hidden" aria-hidden="true"></div>
 </div>
 <datalist id="pokemonNames">
 <option>メガエルレイド</option><option>エルレイド</option><option>ウォッシュロトム</option><option>サーフゴー</option><option>アーマーガア</option><option>マスカーニャ</option><option>ミミッキュ</option><option>メガボーマンダ</option><option>ボーマンダ</option><option>メガアブソルZ</option><option>メガガブリアスZ</option><option>メガルカリオZ</option><option>グライオン</option><option>エースバーン</option>
@@ -124,9 +125,32 @@ function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');matches=
 function save(){localStorage.setItem(KEY,JSON.stringify(matches));renderAll()}
 function checked(group){return [...document.querySelectorAll('#'+group+' input:checked')].map(x=>x.value)}
 function splitNames(s){return (s||'').split(/[\n,、，;；]+/).map(x=>x.trim()).filter(Boolean)}
+
+const POKEMON_NAMES=[
+'アーマーガア','アブソル','アローラキュウコン','エースバーン','エルレイド','オーロンゲ','カイリュー','ガブリアス','グライオン','ゲンガー','サーフゴー','サザンドラ','サーナイト','シャンデラ','ソウブレイズ','ドオー','ドラパルト','ニンフィア','ハッサム','バンギラス','ヒートロトム','フシギバナ','ブリジュラス','ボーマンダ','マスカーニャ','マリルリ','マンムー','ミミッキュ','メタグロス','モロバレル','ラウドボーン','ラグラージ','ルカリオ','ロトム','ウォッシュロトム','メガエルレイド','メガボーマンダ','メガアブソルZ','メガガブリアスZ','メガルカリオZ'
+];
+const pickerState={opponentTeam:[],opponentSelected:[],my1:'',my2:'',my3:''};
+function syncPickerFields(){ $('opponentTeam').value=pickerState.opponentTeam.join('、');$('opponentSelected').value=pickerState.opponentSelected.join('、');['my1','my2','my3'].forEach(k=>$(k).value=pickerState[k]||''); }
+function renderPicker(id,key,limit,sourceKey=null){
+ const root=$(id); if(!root)return; const isSingle=limit===1; const selected=sourceKey?pickerState[sourceKey]:pickerState[key];
+ root.innerHTML='';
+ if(!sourceKey && !isSingle){const chips=document.createElement('div');chips.className='pokemon-chips';selected.forEach(name=>{const chip=document.createElement('span');chip.className='pokemon-chip';chip.textContent=name;const b=document.createElement('button');b.type='button';b.textContent='×';b.setAttribute('aria-label',name+'を削除');b.onclick=()=>{pickerState[key]=pickerState[key].filter(x=>x!==name);if(key==='opponentTeam')pickerState.opponentSelected=pickerState.opponentSelected.filter(x=>pickerState.opponentTeam.includes(x));syncPickerFields();renderAllPickers()};chip.appendChild(b);chips.appendChild(chip)});root.appendChild(chips)}
+ if(sourceKey){const chips=document.createElement('div');chips.className='pokemon-chips';selected.forEach(name=>{const chip=document.createElement('span');chip.className='pokemon-chip';chip.textContent=name;const b=document.createElement('button');b.type='button';b.textContent='×';b.onclick=()=>{pickerState.opponentSelected=pickerState.opponentSelected.filter(x=>x!==name);syncPickerFields();renderAllPickers()};chip.appendChild(b);chips.appendChild(chip)});root.appendChild(chips)}
+ if(isSingle && selected){const chip=document.createElement('div');chip.className='pokemon-chips';const tag=document.createElement('span');tag.className='pokemon-chip';tag.textContent=selected;const b=document.createElement('button');b.type='button';b.textContent='×';b.onclick=()=>{pickerState[key]='';syncPickerFields();renderAllPickers()};tag.appendChild(b);chip.appendChild(tag);root.appendChild(chip)}
+ if(sourceKey){const hint=document.createElement('div');hint.className='hint';hint.textContent='タップして選出・解除';root.appendChild(hint);const candidates=pickerState.opponentTeam.filter(n=>!pickerState.opponentSelected.includes(n));const list=document.createElement('div');list.className='pokemon-results';candidates.forEach(n=>{const b=document.createElement('button');b.type='button';b.className='pokemon-result';b.textContent=n;b.onclick=()=>{if(pickerState.opponentSelected.length<3)pickerState.opponentSelected.push(n);syncPickerFields();renderAllPickers()};list.appendChild(b)});if(!candidates.length){const e=document.createElement('div');e.className='pokemon-empty';e.textContent=pickerState.opponentTeam.length?'全員選出済み':'先に相手の6匹を登録してください';list.appendChild(e)}root.appendChild(list);return}
+ if(isSingle && selected)return;
+ if(!isSingle&&selected.length>=limit)return;
+ const input=document.createElement('input');input.type='search';input.placeholder='ポケモン名の一部を入力';input.autocomplete='off';input.setAttribute('aria-label','ポケモン名を検索');root.appendChild(input);
+ const list=document.createElement('div');list.className='pokemon-results hidden';root.appendChild(list);
+ function update(){const q=input.value.trim().toLocaleLowerCase();list.innerHTML='';if(!q){list.classList.add('hidden');return}const names=POKEMON_NAMES.filter(n=>n.toLocaleLowerCase().includes(q)&&!(isSingle?false:selected.includes(n))).slice(0,12);names.forEach(n=>{const b=document.createElement('button');b.type='button';b.className='pokemon-result';b.textContent=n;b.onclick=()=>add(n);list.appendChild(b)});const exists=names.some(n=>n.toLocaleLowerCase()===q);if(!exists){const b=document.createElement('button');b.type='button';b.className='pokemon-result';b.textContent='「'+input.value.trim()+'」を追加';b.onclick=()=>add(input.value.trim());list.appendChild(b)}if(!list.children.length){const e=document.createElement('div');e.className='pokemon-empty';e.textContent='候補がありません';list.appendChild(e)}list.classList.remove('hidden')}
+ function add(n){n=n.trim();if(!n)return;if(isSingle){pickerState[key]=n}else if(pickerState[key].length<limit&&!pickerState[key].includes(n)){pickerState[key].push(n)}input.value='';syncPickerFields();renderAllPickers()}
+ input.addEventListener('input',update);input.addEventListener('focus',update);
+}
+function renderAllPickers(){renderPicker('opponentTeamPicker','opponentTeam',6);renderPicker('opponentSelectedPicker','opponentSelected',3,'opponentTeam');['my1','my2','my3'].forEach(k=>renderPicker(k+'Picker',k,1));}
+
 function formData(){return {id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),date:$('date').value||today(),season:$('season').value.trim(),result:$('result').value,opponentTeam:splitNames($('opponentTeam').value),opponentSelected:splitNames($('opponentSelected').value),myTeam:[$('my1').value.trim(),$('my2').value.trim(),$('my3').value.trim()].filter(Boolean),threats:checked('threats'),problems:checked('problems'),notes:$('notes').value.trim(),createdAt:new Date().toISOString()}}
-$('matchForm').addEventListener('submit',e=>{e.preventDefault();const m=formData();if(!m.myTeam.length&&!m.opponentTeam.length&&!m.notes){$('formStatus').textContent='自分の選出か相手の6匹など、最低1項目を入力してください。';return}matches.unshift(m);save();$('formStatus').textContent='保存しました。記録一覧・分析に反映しました。';resetForm(false)});
-function resetForm(clearDate=true){const keepDate=$('date').value||today();$('matchForm').reset();$('date').value=clearDate?today():keepDate;$('season').value='M-C / シングル';document.querySelectorAll('#threats input,#problems input').forEach(x=>x.checked=false)}
+$('matchForm').addEventListener('submit',e=>{e.preventDefault();syncPickerFields();const m=formData();if(!m.myTeam.length&&!m.opponentTeam.length&&!m.notes){$('formStatus').textContent='自分の選出か相手の6匹など、最低1項目を入力してください。';return}matches.unshift(m);save();$('formStatus').textContent='保存しました。記録一覧・分析に反映しました。';resetForm(false)});
+function resetForm(clearDate=true){const keepDate=$('date').value||today();Object.keys(pickerState).forEach(k=>pickerState[k]=Array.isArray(pickerState[k])?[]:'');$('matchForm').reset();$('date').value=clearDate?today():keepDate;$('season').value='M-C / シングル';document.querySelectorAll('#threats input,#problems input').forEach(x=>x.checked=false);syncPickerFields();renderAllPickers()}
 $('clearForm').addEventListener('click',()=>{resetForm();$('formStatus').textContent='入力をクリアしました。'});
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function resultText(r){return r==='win'?'勝ち':r==='loss'?'負け':'引き分け・無効'}
@@ -153,6 +177,7 @@ let pendingImport=null;$('importFile').addEventListener('change',async e=>{const
 $('importMerge').addEventListener('click',()=>{if(!pendingImport){$('dataStatus').textContent='先にJSONファイルを選んでください。';return}const ids=new Set(matches.map(m=>m.id));let added=0;pendingImport.forEach(m=>{if(!ids.has(m.id)){matches.push(m);added++}});matches.sort((a,b)=>(b.date||'').localeCompare(a.date||''));save();$('dataStatus').textContent=`${added}件を追加しました（同じIDは重複を避けました）。`;pendingImport=null});
 $('importReplace').addEventListener('click',()=>{if(!pendingImport){$('dataStatus').textContent='先にJSONファイルを選んでください。';return}if(!confirm('現在の全記録を読み込んだデータで置き換えますか？'))return;matches=pendingImport;save();$('dataStatus').textContent=`${matches.length}件に置き換えました。`;pendingImport=null});
 $('deleteAll').addEventListener('click',()=>{if(confirm('すべての記録を削除します。この操作は元に戻せません。先にJSONバックアップを取ることをおすすめします。')){matches=[];save();$('dataStatus').textContent='すべての記録を削除しました。'}});
+renderAllPickers();
 load();
 </script>
 
