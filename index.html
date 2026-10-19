@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#172033">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ポケログ">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>ポケログ｜対戦記録</title>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--ink:#172033;--muted:#657087;--line:#dfe4ee;--accent:#4057c8;--accent2:#edf0ff;--good:#18794e;--bad:#b42318;--radius:16px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.45}
+header{background:#172033;color:white;padding:22px 16px 18px;position:sticky;top:0;z-index:5;box-shadow:0 2px 12px #10182822}
+.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:22px;font-weight:800;letter-spacing:.02em}.sub{font-size:12px;color:#c5cde0;margin-top:3px}.count{font-size:12px;border:1px solid #ffffff45;padding:6px 10px;border-radius:99px;white-space:nowrap}
+main{max-width:900px;margin:18px auto;padding:0 12px 48px}.tabs{display:flex;gap:8px;margin-bottom:14px;overflow:auto}.tab{border:1px solid var(--line);border-radius:99px;background:white;padding:10px 14px;font-weight:700;white-space:nowrap;color:var(--muted)}.tab.active{background:var(--accent);border-color:var(--accent);color:white}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #17203308}.panel h2{font-size:17px;margin:0 0 12px}.panel h3{font-size:14px;margin:16px 0 8px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{min-width:0}.field.full{grid-column:1/-1}label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin-bottom:6px}input,select,textarea{width:100%;border:1px solid #cbd3e1;border-radius:10px;padding:11px 12px;font:inherit;font-size:16px;background:#fff;color:var(--ink);min-width:0}textarea{min-height:76px;resize:vertical}input:focus,select:focus,textarea:focus{outline:3px solid #4057c82b;border-color:var(--accent)}
+.pills{display:flex;flex-wrap:wrap;gap:7px}.pill{position:relative}.pill input{position:absolute;opacity:0;width:1px;height:1px}.pill span{display:block;border:1px solid var(--line);border-radius:99px;padding:8px 11px;font-size:13px;background:white}.pill input:checked+span{background:var(--accent2);border-color:var(--accent);color:var(--accent);font-weight:750}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.btn{border:0;border-radius:11px;padding:12px 15px;font:inherit;font-size:14px;font-weight:800;background:var(--accent);color:white;cursor:pointer}.btn.secondary{background:#edf0f6;color:var(--ink)}.btn.danger{background:#fff0ef;color:var(--bad)}.btn.small{padding:8px 10px;font-size:12px}.hint{font-size:12px;color:var(--muted);margin-top:7px}.status{font-size:13px;margin-top:10px;color:var(--good);min-height:18px}
+.record{border:1px solid var(--line);border-radius:13px;padding:13px;margin-top:10px;background:#fff}.recordtop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.recordtitle{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:3px}.tag{display:inline-block;background:#edf0f6;color:#39445a;padding:4px 7px;border-radius:7px;font-size:11px;margin:5px 4px 0 0}.resultwin{color:var(--good)}.resultloss{color:var(--bad)}.empty{padding:26px 12px;text-align:center;color:var(--muted);font-size:14px}.hidden{display:none!important}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{padding:12px;background:#f5f7fb;border-radius:12px}.stat strong{font-size:23px;display:block}.stat span{font-size:11px;color:var(--muted)}.barrow{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;align-items:center;font-size:13px;margin:9px 0}.barbg{height:8px;background:#edf0f6;border-radius:99px;overflow:hidden}.barfill{height:100%;background:var(--accent);border-radius:99px}.smalltext{font-size:12px;color:var(--muted)}footer{text-align:center;font-size:11px;color:var(--muted);padding:10px}
+@media(min-width:650px){main{padding-left:18px;padding-right:18px}.panel{padding:20px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:9px}.stat strong{font-size:20px}}
+</style>
+</head>
+<body>
+<header><div class="head"><div><div class="brand">ポケログ</div><div class="sub">ポケモンチャンピオンズ｜対戦記録・構築分析</div></div><div class="count" id="headerCount">0 戦記録</div></div></header>
+<main>
+<div class="tabs">
+<button class="tab active" data-tab="entry">＋ 対戦を記録</button>
+<button class="tab" data-tab="history">記録一覧</button>
+<button class="tab" data-tab="analysis">分析</button>
+<button class="tab" data-tab="data">出力・データ管理</button>
+</div>
+
+<section id="entry">
+<form id="matchForm">
+<div class="panel">
+<h2>対戦の基本情報</h2>
+<div class="grid three">
+<div class="field"><label for="date">対戦日</label><input id="date" type="date" required></div>
+<div class="field"><label for="season">シーズン・ルール</label><input id="season" value="M-C / シングル" placeholder="例：M-C / シングル"></div>
+<div class="field"><label for="result">勝敗</label><select id="result"><option value="win">勝ち</option><option value="loss">負け</option><option value="draw">引き分け・無効</option></select></div>
+</div>
+<div class="grid" style="margin-top:12px">
+<div class="field"><label for="opponentTeam">相手の6匹（見せ合い）</label><textarea id="opponentTeam" placeholder="例：ボーマンダ、サーフゴー、ガブリアス…&#10;1行に1匹、または読点・カンマ区切り"></textarea></div>
+<div class="field"><label for="opponentSelected">相手の実際の選出（分かる範囲）</label><textarea id="opponentSelected" placeholder="例：ボーマンダ、サーフゴー、マリルリ"></textarea></div>
+</div>
+<div class="hint">ポケモン名は自由入力です。略称でも記録できますが、分析精度を上げるには毎回同じ表記にしてください。</div>
+</div>
+
+<div class="panel">
+<h2>自分の選出</h2>
+<div class="grid three">
+<div class="field"><label for="my1">1匹目</label><input id="my1" list="pokemonNames" placeholder="例：メガエルレイド"></div>
+<div class="field"><label for="my2">2匹目</label><input id="my2" list="pokemonNames" placeholder="例：ウォッシュロトム"></div>
+<div class="field"><label for="my3">3匹目</label><input id="my3" list="pokemonNames" placeholder="例：マスカーニャ"></div>
+</div>
+<datalist id="pokemonNames">
+<option>メガエルレイド</option><option>エルレイド</option><option>ウォッシュロトム</option><option>サーフゴー</option><option>アーマーガア</option><option>マスカーニャ</option><option>ミミッキュ</option><option>メガボーマンダ</option><option>ボーマンダ</option><option>メガアブソルZ</option><option>メガガブリアスZ</option><option>メガルカリオZ</option><option>グライオン</option><option>エースバーン</option>
+</datalist>
+<div class="grid" style="margin-top:12px">
+<div class="field"><label>相手の主な脅威・印象</label><div class="pills" id="threats">
+<label class="pill"><input type="checkbox" value="竜舞・積み展開"><span>竜舞・積み</span></label>
+<label class="pill"><input type="checkbox" value="高速高火力"><span>高速高火力</span></label>
+<label class="pill"><input type="checkbox" value="受け・耐久"><span>受け・耐久</span></label>
+<label class="pill"><input type="checkbox" value="先制技"><span>先制技</span></label>
+<label class="pill"><input type="checkbox" value="状態異常"><span>状態異常</span></label>
+<label class="pill"><input type="checkbox" value="設置技"><span>設置技</span></label>
+<label class="pill"><input type="checkbox" value="天候・フィールド"><span>天候・フィールド</span></label>
+<label class="pill"><input type="checkbox" value="不明"><span>不明</span></label>
+</div></div>
+<div class="field"><label>試合中に困ったこと</label><div class="pills" id="problems">
+<label class="pill"><input type="checkbox" value="選出ミス"><span>選出ミス</span></label>
+<label class="pill"><input type="checkbox" value="技範囲不足"><span>技範囲不足</span></label>
+<label class="pill"><input type="checkbox" value="素早さ負け"><span>素早さ負け</span></label>
+<label class="pill"><input type="checkbox" value="受け先がいない"><span>受け先不足</span></label>
+<label class="pill"><input type="checkbox" value="積みを止められない"><span>積みを止められない</span></label>
+<label class="pill"><input type="checkbox" value="火力不足"><span>火力不足</span></label>
+<label class="pill"><input type="checkbox" value="交代・読み負け"><span>交代・読み負け</span></label>
+<label class="pill"><input type="checkbox" value="命中・急所など"><span>命中・急所など</span></label>
+</div></div>
+</div>
+<div class="field full" style="margin-top:12px"><label for="notes">短いメモ（任意）</label><textarea id="notes" placeholder="例：ボーマンダに竜舞を許し、マスカーニャの氷技圏外まで削れなかった。ロトムを温存すべきだったかも。"></textarea></div>
+<div class="actions"><button class="btn" type="submit">この対戦を保存</button><button class="btn secondary" type="button" id="clearForm">入力をクリア</button></div>
+<div class="status" id="formStatus" aria-live="polite"></div>
+</div>
+</form>
+</section>
+
+<section id="history" class="hidden">
+<div class="panel"><h2>対戦記録一覧</h2><div class="grid">
+<div class="field"><label for="filterResult">勝敗で絞り込み</label><select id="filterResult"><option value="all">すべて</option><option value="win">勝ち</option><option value="loss">負け</option><option value="draw">引き分け・無効</option></select></div>
+<div class="field"><label for="searchRecords">ポケモン名・メモを検索</label><input id="searchRecords" placeholder="例：ボーマンダ、素早さ負け"></div>
+</div><div id="recordList"></div></div>
+</section>
+
+<section id="analysis" class="hidden">
+<div class="panel"><h2>記録から見える傾向</h2><div id="statsArea"></div><div class="hint">分析は保存した記録の入力内容を集計したものです。技のダメージ計算や試合映像の自動解析は行いません。</div></div>
+<div class="panel"><h2>振り返り用の集計</h2><div id="problemStats"></div></div>
+</section>
+
+<section id="data" class="hidden">
+<div class="panel"><h2>分析用データを書き出す</h2>
+<p class="smalltext">複数戦の記録をまとめてこのチャットに添付できます。JSONは全項目を保持し、CSVは表計算ソフト向けです。</p>
+<div class="actions"><button class="btn" id="exportJson">JSONを書き出す</button><button class="btn secondary" id="exportCsv">CSVを書き出す</button></div>
+</div>
+<div class="panel"><h2>バックアップを読み込む</h2><p class="smalltext">以前書き出したJSONを読み込み、記録を復元できます。「追加」か「置き換え」を選べます。</p>
+<div class="field"><label for="importFile">JSONファイル</label><input type="file" id="importFile" accept=".json,application/json"></div>
+<div class="actions"><button class="btn" id="importMerge">記録を追加</button><button class="btn secondary" id="importReplace">全記録を置き換え</button></div><div id="dataStatus" class="status" aria-live="polite"></div>
+</div>
+<div class="panel"><h2>端末内データについて</h2><p class="smalltext">記録はこのブラウザの端末内ストレージに保存されます。ブラウザのデータ消去や端末変更で失われる場合があるため、定期的にJSONをバックアップしてください。記録が自動でChatGPTに送信されることはありません。</p><button class="btn danger" id="deleteAll">すべての記録を削除</button></div>
+</section>
+<footer>ポケログ｜個人用の対戦メモ。公式ゲームデータとの自動連携はありません。</footer>
+</main>
+<script>
+const KEY='pokelog_matches_v1';
+let matches=[];
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toLocaleDateString('sv-SE');
+$('date').value=today();
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');matches=Array.isArray(x)?x:[]}catch(e){matches=[]}renderAll()}
+function save(){localStorage.setItem(KEY,JSON.stringify(matches));renderAll()}
+function checked(group){return [...document.querySelectorAll('#'+group+' input:checked')].map(x=>x.value)}
+function splitNames(s){return (s||'').split(/[\n,、，;；]+/).map(x=>x.trim()).filter(Boolean)}
+function formData(){return {id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),date:$('date').value||today(),season:$('season').value.trim(),result:$('result').value,opponentTeam:splitNames($('opponentTeam').value),opponentSelected:splitNames($('opponentSelected').value),myTeam:[$('my1').value.trim(),$('my2').value.trim(),$('my3').value.trim()].filter(Boolean),threats:checked('threats'),problems:checked('problems'),notes:$('notes').value.trim(),createdAt:new Date().toISOString()}}
+$('matchForm').addEventListener('submit',e=>{e.preventDefault();const m=formData();if(!m.myTeam.length&&!m.opponentTeam.length&&!m.notes){$('formStatus').textContent='自分の選出か相手の6匹など、最低1項目を入力してください。';return}matches.unshift(m);save();$('formStatus').textContent='保存しました。記録一覧・分析に反映しました。';resetForm(false)});
+function resetForm(clearDate=true){const keepDate=$('date').value||today();$('matchForm').reset();$('date').value=clearDate?today():keepDate;$('season').value='M-C / シングル';document.querySelectorAll('#threats input,#problems input').forEach(x=>x.checked=false)}
+$('clearForm').addEventListener('click',()=>{resetForm();$('formStatus').textContent='入力をクリアしました。'});
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function resultText(r){return r==='win'?'勝ち':r==='loss'?'負け':'引き分け・無効'}
+function renderRecords(){const q=$('searchRecords').value.toLowerCase();const f=$('filterResult').value;const arr=matches.filter(m=>(f==='all'||m.result===f)&&JSON.stringify(m).toLowerCase().includes(q));const root=$('recordList');if(!arr.length){root.innerHTML='<div class="empty">該当する記録がありません。</div>';return}
+root.innerHTML=arr.map(m=>`<article class="record"><div class="recordtop"><div><div class="recordtitle ${m.result==='win'?'resultwin':m.result==='loss'?'resultloss':''}">${esc(resultText(m.result))} · ${esc(m.date)} <span class="smalltext">${esc(m.season||'')}</span></div><div class="meta">自分：${esc((m.myTeam||[]).join(' / ')||'未入力')}</div></div><button class="btn danger small" data-delete="${esc(m.id)}">削除</button></div>
+<div class="smalltext" style="margin-top:7px">相手6匹：${esc((m.opponentTeam||[]).join('、')||'未入力')}</div><div class="smalltext">相手選出：${esc((m.opponentSelected||[]).join('、')||'不明')}</div>
+<div>${[...(m.threats||[]),...(m.problems||[])].map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>${m.notes?`<p style="font-size:13px;margin:9px 0 0">${esc(m.notes)}</p>`:''}</article>`).join('');
+root.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>{if(confirm('この対戦記録を削除しますか？')){matches=matches.filter(m=>m.id!==b.dataset.delete);save()}}))}
+function countBy(arr,key){const out={};arr.forEach(m=>(m[key]||[]).forEach(v=>out[v]=(out[v]||0)+1));return Object.entries(out).sort((a,b)=>b[1]-a[1])}
+function renderAnalysis(){const total=matches.length,w=matches.filter(m=>m.result==='win').length,l=matches.filter(m=>m.result==='loss').length,d=matches.filter(m=>m.result==='draw').length;const rate=(w+l)?Math.round(w/(w+l)*100):0;
+$('statsArea').innerHTML=total?`<div class="stats"><div class="stat"><strong>${total}</strong><span>総試合数</span></div><div class="stat"><strong>${rate}%</strong><span>勝率（引き分け除外）</span></div><div class="stat"><strong>${l}</strong><span>敗北数</span></div></div><div style="margin-top:15px" class="smalltext">勝ち ${w} · 負け ${l} · 引き分け等 ${d}</div><h3>選出回数（自分）</h3>${rankTeam()}<h3>対戦相手の出現回数（見せ合い）</h3>${rankOpp()}`:'<div class="empty">まずは1試合記録してください。</div>';
+const probs=countBy(matches,'problems');$('problemStats').innerHTML=probs.length?probs.map(([name,n])=>`<div class="barrow"><span>${esc(name)}</span><div class="barbg"><div class="barfill" style="width:${Math.max(3,n/Math.max(...probs.map(x=>x[1]))*100)}%"></div></div><strong>${n}回</strong></div>`).join(''):'<div class="empty">「困ったこと」を選ぶと、繰り返し発生する問題を集計します。</div>'}
+function rankTeam(){const c={};matches.forEach(m=>(m.myTeam||[]).forEach(n=>{if(n)c[n]=(c[n]||0)+1}));const a=Object.entries(c).sort((x,y)=>y[1]-x[1]).slice(0,8);return a.length?a.map(([n,v])=>`<div class="barrow"><span>${esc(n)}</span><div class="barbg"><div class="barfill" style="width:${v/Math.max(...a.map(x=>x[1]))*100}%"></div></div><strong>${v}回</strong></div>`).join(''):'<div class="smalltext">まだデータがありません。</div>'}
+function rankOpp(){const c={};matches.forEach(m=>(m.opponentTeam||[]).forEach(n=>{c[n]=(c[n]||0)+1}));const a=Object.entries(c).sort((x,y)=>y[1]-x[1]).slice(0,8);return a.length?a.map(([n,v])=>`<div class="barrow"><span>${esc(n)}</span><div class="barbg"><div class="barfill" style="width:${v/Math.max(...a.map(x=>x[1]))*100}%"></div></div><strong>${v}回</strong></div>`).join(''):'<div class="smalltext">まだデータがありません。</div>'}
+function renderAll(){$('headerCount').textContent=matches.length+' 戦記録';renderRecords();renderAnalysis()}
+function showTab(name){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));['entry','history','analysis','data'].forEach(id=>$(id).classList.toggle('hidden',id!==name));if(name==='history')renderRecords();if(name==='analysis')renderAnalysis();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+$('filterResult').addEventListener('change',renderRecords);$('searchRecords').addEventListener('input',renderRecords);
+function download(filename,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('exportJson').addEventListener('click',()=>{download('pokelog_'+today()+'.json',JSON.stringify({app:'ポケログ',version:1,exportedAt:new Date().toISOString(),matches},null,2),'application/json;charset=utf-8');$('dataStatus').textContent='JSONを書き出しました。'});
+function csvCell(v){let s=Array.isArray(v)?v.join(' / '):String(v??'');return '"'+s.replace(/"/g,'""')+'"'}
+$('exportCsv').addEventListener('click',()=>{const cols=[['date','日付'],['season','ルール'],['result','勝敗'],['opponentTeam','相手の6匹'],['opponentSelected','相手の選出'],['myTeam','自分の選出'],['threats','相手の脅威'],['problems','困ったこと'],['notes','メモ']];const rows=[cols.map(x=>x[1]).join(','),...matches.map(m=>cols.map(([k])=>csvCell(k==='result'?resultText(m[k]):m[k])).join(','))];download('pokelog_'+today()+'.csv','\ufeff'+rows.join('\r\n'),'text/csv;charset=utf-8');$('dataStatus').textContent='CSVを書き出しました。'});
+let pendingImport=null;$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text());const list=Array.isArray(obj)?obj:obj.matches;if(!Array.isArray(list))throw new Error('matches配列がありません');pendingImport=list;$('dataStatus').textContent=`${list.length}件の記録を読み込み準備しました。追加または置き換えを選んでください。`}catch(err){pendingImport=null;$('dataStatus').textContent='読み込めませんでした。ポケログのJSONファイルを選択してください。'}});
+$('importMerge').addEventListener('click',()=>{if(!pendingImport){$('dataStatus').textContent='先にJSONファイルを選んでください。';return}const ids=new Set(matches.map(m=>m.id));let added=0;pendingImport.forEach(m=>{if(!ids.has(m.id)){matches.push(m);added++}});matches.sort((a,b)=>(b.date||'').localeCompare(a.date||''));save();$('dataStatus').textContent=`${added}件を追加しました（同じIDは重複を避けました）。`;pendingImport=null});
+$('importReplace').addEventListener('click',()=>{if(!pendingImport){$('dataStatus').textContent='先にJSONファイルを選んでください。';return}if(!confirm('現在の全記録を読み込んだデータで置き換えますか？'))return;matches=pendingImport;save();$('dataStatus').textContent=`${matches.length}件に置き換えました。`;pendingImport=null});
+$('deleteAll').addEventListener('click',()=>{if(confirm('すべての記録を削除します。この操作は元に戻せません。先にJSONバックアップを取ることをおすすめします。')){matches=[];save();$('dataStatus').textContent='すべての記録を削除しました。'}});
+load();
+</script>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((err) => {
+      console.error("Service worker registration failed:", err);
+    });
+  });
+}
+</script>
+
+</body>
+</html>

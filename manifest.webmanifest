@@ -1,0 +1,26 @@
+{
+  "name": "ポケログ｜対戦記録・構築分析",
+  "short_name": "ポケログ",
+  "description": "ポケモン対戦の記録、戦績集計、構築分析を行う個人用ツール",
+  "lang": "ja",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f6fa",
+  "theme_color": "#172033",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
